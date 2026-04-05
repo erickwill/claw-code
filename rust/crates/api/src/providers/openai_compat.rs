@@ -742,7 +742,12 @@ fn openai_tool_definition(tool: &ToolDefinition) -> Value {
         "function": {
             "name": tool.name,
             "description": tool.description,
-            "parameters": tool.input_schema,
+            "parameters": json!({
+                "type": "object",
+                "properties": tool.input_schema.get("properties").unwrap_or(&json!({})),
+                                "required": tool.input_schema.get("required").unwrap_or(&json!([])),
+                                "additionalProperties": false
+            }),
         }
     })
 }
